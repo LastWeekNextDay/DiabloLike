@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 168287574690310949}
-  - component: {fileID: 9083730194971047579}
+  - component: {fileID: -6227948770369705051}
   m_Layer: 0
   m_Name: WeaponAttack
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9083730194971047579
+--- !u!114 &-6227948770369705051
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2489356ff5c161c4191cbc8e8f8acdb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Texture: {fileID: 0}
-  Name: 
+  Texture: {fileID: 2800000, guid: 9b32f2ca66a501040896e0f2bb8e5887, type: 3}
+  Name: Attack
   PhysicalDamage: 0
   FireDamage: 0
   ColdDamage: 0
@@ -55,9 +55,7 @@ MonoBehaviour:
   Cooldown: 0
   Range: 0
   AoeRadius: 0
-  ManaCost: 0
+  ManaCost: 1
   AnimationState: 
   IsOnCooldown: 0
   CooldownTimer: 0
-  assignedCharacter: {fileID: 0}
-  IsEquipped: 0

@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 771234117259604205}
-  - component: {fileID: 7091874392448240425}
-  m_Layer: 0
+  - component: {fileID: 9079630897603079399}
+  m_Layer: 3
   m_Name: Fist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7091874392448240425
+--- !u!114 &9079630897603079399
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,19 +41,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6911368168243519539}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8354a6866e7cc84448e5ebe154a699b4, type: 3}
+  m_Script: {fileID: 11500000, guid: abe00226e05ee2443acc3a0bb49a95a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Texture: {fileID: 0}
-  Name: 
+  Texture: {fileID: 2800000, guid: 9b32f2ca66a501040896e0f2bb8e5887, type: 3}
+  Name: Fist
   LevelRequirement: 0
   StrengthRequirement: 0
   DexterityRequirement: 0
   IntelligenceRequirement: 0
-  Type: 
-  PhysicalDamage: 0
+  PhysicalDamage: 5
   FireDamage: 0
   ColdDamage: 0
   LightningDamage: 0
   ChaosDamage: 0
-  AnimationState: 
+  AnimationState: FistPunch
+  CastTime: 0.5
+  Cooldown: 0.25
+  Range: 1
+  AoeRadius: 1

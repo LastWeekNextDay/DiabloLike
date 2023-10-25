@@ -60,36 +60,36 @@ public class Ability : MonoBehaviour
 
     protected virtual void DealDamage(Character receiver)
     {
-        float damage = CalculatePhysicalDamage(PhysicalDamage, receiver.PhysicalResistance) +
-                        CalculateFireDamage(FireDamage, receiver.FireResistance) +
-                        CalculateColdDamage(ColdDamage, receiver.ColdResistance) +
-                        CalculateLightningDamage(LightningDamage, receiver.LightningResistance) +
-                        CalculateChaosDamage(ChaosDamage, receiver.ChaosResistance);
+        float damage = PhysicalDamageAfterRes(PhysicalDamage, receiver.PhysicalResistance) +
+                        FireDamageAfterRes(FireDamage, receiver.FireResistance) +
+                        ColdDamageAfterRes(ColdDamage, receiver.ColdResistance) +
+                        LightningDamageAfterRes(LightningDamage, receiver.LightningResistance) +
+                        ChaosDamageAfterRes(ChaosDamage, receiver.ChaosResistance);
         receiver.Health -= (int)damage;
         _uiController.ShowDamageNumber((int)damage, receiver.gameObject, transform.parent.gameObject);
     }
 
-    protected float CalculatePhysicalDamage(float physicalDamage, int physicalResistance)
+    protected float PhysicalDamageAfterRes(float physicalDamage, int physicalResistance)
     {
         return physicalDamage - physicalDamage * ((float)physicalResistance / 100);
     }
 
-    protected float CalculateFireDamage(float fireDamage, int fireResistance)
+    protected float FireDamageAfterRes(float fireDamage, int fireResistance)
     {
         return fireDamage - fireDamage * ((float)fireResistance / 100);
     }
 
-    protected float CalculateColdDamage(float coldDamage, int coldResistance)
+    protected float ColdDamageAfterRes(float coldDamage, int coldResistance)
     {
         return coldDamage - coldDamage * ((float)coldResistance / 100);
     }
 
-    protected float CalculateLightningDamage(float lightningDamage, int lightningResistance)
+    protected float LightningDamageAfterRes(float lightningDamage, int lightningResistance)
     {
         return lightningDamage - lightningDamage * ((float)lightningResistance / 100);
     }
 
-    protected float CalculateChaosDamage(float chaosDamage, int chaosResistance)
+    protected float ChaosDamageAfterRes(float chaosDamage, int chaosResistance)
     {
         return chaosDamage - chaosDamage * ((float)chaosResistance / 100);
     }

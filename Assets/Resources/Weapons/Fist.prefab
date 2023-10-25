@@ -58,5 +58,5 @@ MonoBehaviour:
   AnimationState: FistPunch
   CastTime: 0.5
   Cooldown: 0.25
-  Range: 1
+  Range: 1.5
   AoeRadius: 1

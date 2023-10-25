@@ -37,10 +37,9 @@ public class CameraScript : MonoBehaviour
     public RaycastHit GetCalculatedMouseHitInfo()
     {
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitInfo;
-        Physics.Raycast(ray, out hitInfo);
-        return hitInfo;
+        return Physics.Raycast(ray, out RaycastHit hitInfo) ? hitInfo : new RaycastHit();
     }
+
 
     void CalculateGameplayCamera()
     {
@@ -83,37 +82,9 @@ public class CameraScript : MonoBehaviour
 
     void DriftCameraToPlayer()
     {
-        if (_camera.transform.position.x - _offsetX != _player.transform.position.x)
-        {
-            if (Mathf.Abs(_camera.transform.position.x - _offsetX - _player.transform.position.x) < _cameraDriftSpeed)
-            {
-                _camera.transform.position = new Vector3(_player.transform.position.x + _offsetX, _camera.transform.position.y, _camera.transform.position.z);
-            } else
-            {
-                if (_camera.transform.position.x - _offsetX > _player.transform.position.x)
-                {
-                    _camera.transform.position -= new Vector3(_cameraDriftSpeed, 0, 0);
-                } else
-                {
-                    _camera.transform.position += new Vector3(_cameraDriftSpeed, 0, 0);
-                }
-            }
-        }
-        if (_camera.transform.position.z - _offsetZ != _player.transform.position.z)
-        {
-            if (Mathf.Abs(_camera.transform.position.z - _offsetZ - _player.transform.position.z) < _cameraDriftSpeed)
-            {
-                _camera.transform.position = new Vector3(_camera.transform.position.x, _camera.transform.position.y, _player.transform.position.z + _offsetZ);
-            } else
-            {
-                if (_camera.transform.position.z - _offsetZ > _player.transform.position.z)
-                {
-                    _camera.transform.position -= new Vector3(0, 0, _cameraDriftSpeed);
-                } else
-                {
-                    _camera.transform.position += new Vector3(0, 0, _cameraDriftSpeed);
-                }
-            }
-        }
+        float newX = Mathf.MoveTowards(_camera.transform.position.x - _offsetX, _player.transform.position.x, _cameraDriftSpeed);
+        float newZ = Mathf.MoveTowards(_camera.transform.position.z - _offsetZ, _player.transform.position.z, _cameraDriftSpeed);
+        _camera.transform.position = new Vector3(newX + _offsetX, _camera.transform.position.y, newZ + _offsetZ);
     }
+
 }

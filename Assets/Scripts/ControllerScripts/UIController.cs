@@ -154,9 +154,8 @@ public class UIController : MonoBehaviour
     void CalculateAndDisplayDamageEffect(int damage)
     {
         GameObject effect = Instantiate(_damageEffect, GameObject.Find("Canvas").transform);
-        float screenRatio = (float)Screen.width / (float)Screen.height;
-        effect.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width * (screenRatio / 2f), Screen.height * (screenRatio / 2f));
-        float hurtRatio = (float)damage / (float)GameObject.Find("Player").GetComponent<Character>().MaxHealth;
+        effect.transform.SetAsFirstSibling();
+        float hurtRatio = (float)damage / (float)GameObject.Find("Player").GetComponent<Character>().Health;
         effect.GetComponent<DamageEffectScript>().HitDamageEffectThreshold = false;
         StartCoroutine(FadeThenRemoveDamageEffect(hurtRatio, effect));
     }
@@ -172,6 +171,7 @@ public class UIController : MonoBehaviour
             }
             yield return null;
         }
+        yield return new WaitForSeconds(0.25f);
         while (effect.GetComponent<RawImage>().color.a > 0 && effect.GetComponent<DamageEffectScript>().HitDamageEffectThreshold)
         {
             effect.GetComponent<RawImage>().color -= new Color(0, 0, 0, 0.01f);

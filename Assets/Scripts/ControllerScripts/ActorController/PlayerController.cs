@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class PlayerController : GeneralController
 {
-    private SceneController _sceneController;
     private CameraScript _cameraScript;
     private UIController _uiController;
     
@@ -15,7 +14,6 @@ public class PlayerController : GeneralController
     {
         base.Start();
         _uiController = GameObject.Find("UIController").GetComponent<UIController>();
-        _sceneController = GameObject.Find("SceneController").GetComponent<SceneController>();
         _cameraScript = Camera.main.GetComponent<CameraScript>();
     }
 
@@ -30,7 +28,7 @@ public class PlayerController : GeneralController
     {
         if (Input.GetMouseButton(0))
         {
-            if (CanMove == false || _character.Health <= 0)
+            if (CanMove == false)
             {
                 return;
             }
@@ -38,29 +36,27 @@ public class PlayerController : GeneralController
         }
         if (Input.GetMouseButton(1))
         {
-            if (CanAttack == false || _character.Health <= 0)
+            if (CanAttack == false)
             {
                 return;
             }
-            ProcessAttack();                
+            ProcessAbility(_character.EquippedAbility.GetComponent<Ability>());                
         }
-        // if W is pressed, use movement ability
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (CanMove == false || _character.Health <= 0)
+            if (CanMove == false)
             {
                 return;
             }
-            ProcessMovementAbility();
+            ProcessAbility(_character.EquippedMovementAbility.GetComponent<Ability>());
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
             _uiController.ToggleInventory();
         }
-
     }
 
-    private void ProcessMovementAbility()
+    void ProcessAbility(Ability ability)
     {
         RaycastHit mouseHit = _cameraScript.GetCalculatedMouseHitInfo();
         Vector3 target = Vector3.zero;
@@ -72,21 +68,7 @@ public class PlayerController : GeneralController
         {
             target = mouseHit.point;
         }
-        MovementAbility(target);
-    }
-
-    void ProcessAttack()
-    {
-        RaycastHit mouseHit = _cameraScript.GetCalculatedMouseHitInfo();
-        Vector3 target = Vector3.zero;  
-        if (mouseHit.point == Vector3.zero)
-        {
-            target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        } else
-        {
-            target = mouseHit.point;
-        }
-        Attack(target);
+        Cast(target, ability);
     }
 
     void ProcessPlayerMovement()

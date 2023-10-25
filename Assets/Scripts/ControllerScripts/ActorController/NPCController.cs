@@ -8,6 +8,7 @@ public class NPCController : GeneralController
 {
     public GameObject Target;
     public bool WalkAround = false;
+    public bool IsWaiting = false;
     private float _originalSpeed;
     // Start is called before the first frame update
     protected override void Start()
@@ -25,20 +26,13 @@ public class NPCController : GeneralController
 
     void Activity()
     {
-        if (_character.Health <= 0)
-        {
-            return;
-        }
-        PatrolAround();
-        LookForEnemies();
+        if (CanMove) PatrolAround();
+        if (CanAttack) LookForEnemies();
     }
 
     void LookForEnemies()
     {
-        if (CheckIfCanEngage() == false)
-        {
-            return;
-        }
+        if (!CanEngage()) return;
         if (Target != null)
         {
             if (Target.GetComponent<Character>().Health <= 0)
@@ -49,7 +43,7 @@ public class NPCController : GeneralController
             }
         } else
         {
-            if (CreateAoeHitCheckerAndReturn(out List<Collider> colliders))
+            if (HitCheckerHit(out List<Collider> colliders))
             {
                 float closestDistance = 50f;
                 foreach (Collider collider in colliders)
@@ -65,32 +59,21 @@ public class NPCController : GeneralController
         } 
     }
 
-    bool CheckIfCanEngage()
+    bool CanEngage()
     {
-        if (CanAttack == false || CanMove == false)
-        {
-            return false;
-        }
+        if (CanAttack == false || CanMove == false) return false;
         return true;
     }
 
     void Engage()
     {
-        if (CheckIfCanEngage() == false)
-        {
-            return;
-        }
+        if (!CanEngage()) return;
         if (Target != null)
         {
+            IsWaiting = false;
             float distance = Vector3.Distance(transform.position, Target.transform.position);
-            if (distance > _character.EquippedAbility.GetComponent<Ability>().Range)
-            {
-                Move(Target.transform.position);
-            }
-            if (distance <= _character.EquippedAbility.GetComponent<Ability>().Range)
-            {
-                Attack(Target.transform.position);
-            }
+            if (distance > _character.EquippedAbility.GetComponent<Ability>().Range) Move(Target.transform.position);
+            if (distance <= _character.EquippedAbility.GetComponent<Ability>().Range) Cast(Target.transform.position, _character.EquippedAbility.GetComponent<Ability>());
         }
     }
 
@@ -101,23 +84,28 @@ public class NPCController : GeneralController
             _navMeshAgent.speed = _originalSpeed;
             return;
         }
-        if (_navMeshAgent.speed > 2)
+        if (_navMeshAgent.speed > 2) _navMeshAgent.speed = 2;
+        if (Vector3.Distance(transform.position, _navMeshAgent.destination) <= 3f && !IsWaiting)
         {
-            _navMeshAgent.speed = 2;
+            StartCoroutine(WaitThenPatrol(5));
         }
-        
-        if (Vector3.Distance(transform.position, _navMeshAgent.destination) <= 10f)
-        {
-            CreateRandomDestination();
-        } else
+        else
         {
             return;
         }
     }
 
-    private void CreateRandomDestination()
+    IEnumerator WaitThenPatrol(float time)
     {
-        Vector3 randomPoint = transform.position + Random.insideUnitSphere * 20f;
+        IsWaiting = true;
+        yield return new WaitForSeconds(time);
+        IsWaiting = false;
+        CreateRandomDestination();
+    }
+
+    void CreateRandomDestination()
+    {
+        Vector3 randomPoint = transform.position + Random.insideUnitSphere * 10f;
         NavMeshHit hit;
         if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
         {
@@ -125,7 +113,7 @@ public class NPCController : GeneralController
         }
     }
 
-    bool CreateAoeHitCheckerAndReturn(out List<Collider> colliders)
+    bool HitCheckerHit(out List<Collider> colliders)
     {
         colliders = new List<Collider>();
         Vector3 pos = _character.gameObject.transform.position;
